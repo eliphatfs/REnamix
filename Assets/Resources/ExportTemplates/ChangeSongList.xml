@@ -1,0 +1,17 @@
+<Song id="_song_$(TITLE)" type="FREE">
+		<Author>RENX</Author>
+		<BPM>$(BPM)</BPM>
+		<Cover id="_cover_$(TITLE)" />
+		<Name>$(TITLE)</Name>
+		<Package>Phase1Free</Package>
+		<PreviewAudio id="_audio_$(TITLE)" />
+		<Rank>1</Rank>
+<Maps>
+	<MapData id="_map_$(TITLE)_M" level="$(DIFFICULTY)" levelName="MEGA"><combo>$(NOTECOUNT)</combo></MapData>
+</Maps>
+		<RegularMaps>
+				<MapData id="_map_$(TITLE)_M" level="$(DIFFICULTY)" levelName="MEGA"><combo>$(NOTECOUNT)</combo></MapData>
+		</RegularMaps>
+<ExtraMaps>
+</ExtraMaps>
+</Song>

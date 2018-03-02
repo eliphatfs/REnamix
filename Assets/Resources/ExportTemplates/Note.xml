@@ -1,0 +1,8 @@
+<CMapNoteAsset>
+	<m_id>$(ID)</m_id>
+	<m_type>$(TYPE)</m_type>
+	<m_time>$(TIME)</m_time>
+	<m_position>$(POSITION)</m_position>
+	<m_width>$(WIDTH)</m_width>
+	<m_subId>$(SUBID)</m_subId>
+</CMapNoteAsset>

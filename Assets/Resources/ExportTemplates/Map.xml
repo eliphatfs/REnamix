@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<m_path>$(TITLE)</m_path>
+	<m_barPerMin>$(BPM)</m_barPerMin>
+	<m_timeOffset>$(OFFSET)</m_timeOffset>
+	<m_leftRegion>PAD</m_leftRegion>
+	<m_rightRegion>PAD</m_rightRegion>
+	<m_mapID>_map_$(TITLE)_M</m_mapID>
+	<m_notes>
+		<m_notes>
+			$(NOTES_PIANO)
+		</m_notes>
+	</m_notes>
+	<m_notesLeft>
+		<m_notes>
+		</m_notes>
+	</m_notesLeft>
+	<m_notesRight>
+		<m_notes>
+		</m_notes>
+	</m_notesRight>
+</CMap>
