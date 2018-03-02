@@ -1,6 +1,9 @@
 # REnamix (RECONSTRUCTION_Dynamix)
 自制分为两部分: Decomposition 和 RECONSTRUCTION.  
 **使用前请仔细阅读本文档！**  
+
+下载地址：https://github.com/strongrex2001/REnamix/releases/tag/Renamix.beta.2.1  
+(Renamix.beta.2.1.zip，解压后可直接使用)
   
 可视化做谱器。并且可以直接导出avi视频，输出文件是renamix_Data下的output.avi文件。  
 大量操作均需要由快捷键完成。  
