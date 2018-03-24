@@ -64,6 +64,7 @@ public class NoteSelection : MonoBehaviour {
 		if (MouseInterfaceID == -1 && Input.GetMouseButton (0) && GridManager.Instance.GridDir == mData.Direction && JudgeContain () && !TimeControlSystem.isPlaying) {
 			if (lastClick < 20) {
 				Instantiate (Resources.Load<GameObject> ("UI/NoteDataEdit"), HotkeySystem.Instance.Canvas.transform).GetComponent<NoteDataEdit> ().Editing = mData;
+				MouseInterfaceID = -2;
 			} else {
 				MouseInterfaceID = Mathf.Abs (GetHashCode ());
 				IsSelected = true;
