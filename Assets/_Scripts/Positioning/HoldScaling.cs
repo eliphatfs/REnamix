@@ -47,6 +47,7 @@ public class HoldScaling : MonoBehaviour, INoteScaling {
 			sc.x = Begin.localScale.x * 4f;
 			sc.y = Mathf.Abs (End.position.x - bgp.x) * 2f;
 		}
+		End.GetComponent<NoteData> ().Time = Mathf.Max (Begin.GetComponent<NoteData> ().Time + 60, End.GetComponent<NoteData> ().Time);
 		End.GetComponent<NoteData> ().Position = Begin.GetComponent<NoteData> ().Position;
 		End.GetComponent<NoteData> ().Width = Begin.GetComponent<NoteData> ().Width;
 		End.GetComponent<NoteData> ().NotifyWidth = true;
