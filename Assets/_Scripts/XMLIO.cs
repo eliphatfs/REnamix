@@ -6,61 +6,103 @@ using System.Xml;
 using UnityEngine;
 
 public static class XMLIO {
-	public static void Read (Stream file) {
+	public static void Read (FileStream file) {
 		foreach (var nd in NoteData.Instances.ToArray ())
 			MonoBehaviour.DestroyObject (nd.gameObject);
 		XmlDocument doc = new XmlDocument ();
 		doc.Load (file);
 		XmlNode cmap = doc.SelectSingleNode ("CMap");
-		ChartInfoManager.Name = cmap.SelectSingleNode ("m_path").InnerText;
+		ChartInfoManager.Name = cmap.SelectSingleNode ("m_path") == null ? file.Name.Replace(".xml", "") : cmap.SelectSingleNode ("m_path").InnerText;
 		ChartInfoManager.BPM = float.Parse (cmap.SelectSingleNode ("m_barPerMin").InnerText) * 4;
 		ChartInfoManager.Offset = (int)(-float.Parse (cmap.SelectSingleNode ("m_timeOffset").InnerText) * 240000 / ChartInfoManager.BPM);
 
 		XmlNode piano = cmap.SelectSingleNode ("m_notes");
 		piano = piano.SelectSingleNode ("m_notes");
-		ReadNotes (0, piano.ChildNodes);
+		int kind = 0;
+		try {
+			ReadNotes (0, piano.ChildNodes);
+		}
+		catch {
+			kind++;
+			piano = piano.ParentNode;
+			ReadNotes (0, piano.ChildNodes);
+		}
 
 		XmlNode left = cmap.SelectSingleNode ("m_notesLeft");
-		left = left.SelectSingleNode ("m_notes");
+		if (kind == 0)
+			left = left.SelectSingleNode ("m_notes");
 		ReadNotes (-1, left.ChildNodes);
 
 		XmlNode right = cmap.SelectSingleNode ("m_notesRight");
-		right = right.SelectSingleNode ("m_notes");
+		if (kind == 0)
+			right = right.SelectSingleNode ("m_notes");
 		ReadNotes (1, right.ChildNodes);
-
-		ChartInfoManager.Difficulty = (ChartInfoManager.Difficulties)Enum.Parse (
-			typeof(ChartInfoManager.Difficulties), 
-			cmap.SelectSingleNode ("m_mapID").InnerText.Substring (cmap.SelectSingleNode ("m_mapID").InnerText.Length - 1),
-			true
-		);
-
+		try {
+			ChartInfoManager.Difficulty = (ChartInfoManager.Difficulties)Enum.Parse (
+				typeof(ChartInfoManager.Difficulties), 
+				cmap.SelectSingleNode ("m_mapID").InnerText.Substring (cmap.SelectSingleNode ("m_mapID").InnerText.Length - 1),
+				true
+			);
+		}
+		catch {
+			Debug.LogWarning ("Difficulty Unknown");
+		}
 	}
 
 	public static void ReadNotes (int direction, XmlNodeList nodes) {
 		SubsToRefer.Clear ();
 		foreach (XmlNode node in nodes) {
-			ReadNote (nodes, node).GetComponent<NoteData> ().Direction = direction;
+			GameObject go = ReadNote1 (nodes, node);
+			if (go != null)
+				go.GetComponent<NoteData> ().Direction = direction;
+		}
+		foreach (XmlNode node in nodes) {
+			GameObject go = ReadNote2 (nodes, node);
+			if (go != null)
+				go.GetComponent<NoteData> ().Direction = direction;
 		}
 	}
 
 	public static SortedDictionary<int, NoteData> SubsToRefer = new SortedDictionary<int, NoteData>();
 
-	public static GameObject ReadNote (XmlNodeList list, XmlNode node) {
+	public static GameObject ReadNote1 (XmlNodeList list, XmlNode node) {
 		GameObject go = null;
 		NoteData nd = null;
+		Debug.Log (node.OuterXml);
 		switch (node.SelectSingleNode ("m_type").InnerText) {
 		case "NORMAL":
+		case "0":
 			go = GameObject.Instantiate (Resources.Load<GameObject> ("NoteNormal"));
 			break;
 		case "CHAIN":
+		case "1":
 			go = GameObject.Instantiate (Resources.Load<GameObject> ("NoteChain"));
 			break;
 		case "HOLD":
+		case "2":
 			go = GameObject.Instantiate (Resources.Load<GameObject> ("NoteHoldHold"));
 			int sub = int.Parse (node.SelectSingleNode ("m_subId").InnerText);
 			SubsToRefer.Add (sub, go.GetComponent<NoteData> ());
 			break;
 		case "SUB":
+		case "3":
+			return null;
+		}
+		nd = go.GetComponent<NoteData> ();
+		nd.Position = float.Parse (node.SelectSingleNode ("m_position").InnerText);
+		nd.Width = float.Parse (node.SelectSingleNode ("m_width").InnerText);
+		nd.Time = ParamCalculator.BarToTime (float.Parse (node.SelectSingleNode ("m_time").InnerText));
+		nd.NotifyWidth = true;
+		return go;
+	}
+
+	public static GameObject ReadNote2 (XmlNodeList list, XmlNode node) {
+		GameObject go = null;
+		NoteData nd = null;
+		Debug.Log (node.OuterXml);
+		switch (node.SelectSingleNode ("m_type").InnerText) {
+		case "SUB":
+		case "3":
 			go = GameObject.Instantiate (Resources.Load<GameObject> ("NoteHoldSub"));
 			int id = int.Parse (node.SelectSingleNode ("m_id").InnerText);
 			SubsToRefer [id].Sub = go.GetComponent<NoteData> ();
@@ -71,6 +113,8 @@ public static class XMLIO {
 
 			SubsToRefer.Remove (id);
 			break;
+		default:
+			return null;
 		}
 		nd = go.GetComponent<NoteData> ();
 		nd.Position = float.Parse (node.SelectSingleNode ("m_position").InnerText);

@@ -12,7 +12,7 @@ public static class Dialogs {
 		dlg.CheckPathExists = true;
 		DialogResult result = dlg.ShowDialog ();
 		if (result == DialogResult.OK || result == DialogResult.Yes) {
-			Stream s = dlg.OpenFile ();
+			FileStream s = dlg.OpenFile () as FileStream;
 			XMLIO.Read (s);
 			s.Close ();
 		}
