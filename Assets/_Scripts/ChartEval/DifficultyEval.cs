@@ -35,12 +35,14 @@ public class DifficultyEval : MonoBehaviour {
 	public struct Finger {
 		public Vector2 Position;
 		public float PressTime;
-		public uint Tiredness = 0;
+		public uint Tiredness;
 		public float TiredCoefficient {
 			get { return (Mathf.Log (Tiredness + 50) - Mathf.Log (50)) / 10f; }
 		}
 		public Finger(float pressTime) {
 			PressTime = pressTime;
+			Tiredness = 0;
+			Position = new Vector2 ();
 		}
 	}
 }
