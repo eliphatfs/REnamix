@@ -142,7 +142,7 @@ public static class XMLIO {
 		cmap.AppendChild (mbpm);
 
 		var mofs = doc.CreateElement ("m_timeOffset");
-		mofs.InnerText = (ChartInfoManager.Offset * ChartInfoManager.BPM / 240000f).ToString ("0.00000");
+		mofs.InnerText = -(ChartInfoManager.Offset * ChartInfoManager.BPM / 240000f).ToString ("0.00000");
 		cmap.AppendChild (mofs);
 
 		List<NoteData> pianoNotes = NoteData.Instances.FindAll ((n) => n.Direction == 0);
