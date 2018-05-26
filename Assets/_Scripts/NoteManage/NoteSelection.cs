@@ -36,6 +36,7 @@ public class NoteSelection : MonoBehaviour {
 		StartCoroutine (do_Update ());
 	}
 
+	UndoSystem.NoteDataBefore dataBefore;
 	IEnumerator do_Update () {
 		if (ShouldAttachGridX) {
 			ShouldAttachGridX = false;
@@ -68,6 +69,7 @@ public class NoteSelection : MonoBehaviour {
 			} else {
 				MouseInterfaceID = Mathf.Abs (GetHashCode ());
 				IsSelected = true;
+				dataBefore = new UndoSystem.NoteDataBefore (mData);
 
 				mIndicator = Instantiate (Resources.Load<GameObject> ("RectLines")).GetComponent<RectLines> ();
 				mIndicator.Rectangle = Hitbox;
@@ -83,6 +85,7 @@ public class NoteSelection : MonoBehaviour {
 
 				mIndicator.NeedsDestroy = true;
 				AttachToGridY ();
+				UndoSystem.RegisterUndo (new UndoSystem.NoteDataChangeUndoAction (mData, dataBefore, new UndoSystem.NoteDataBefore (mData)));
 			}
 		}
 		if (MouseInterfaceID == -1 && Input.GetMouseButtonDown (1) && JudgeContain ()) {
@@ -135,6 +138,7 @@ public class NoteSelection : MonoBehaviour {
 	public void AttachToGridX () {
 		if (GridManager.Instance.NumRows <= 0)
 			return;
+		dataBefore = new UndoSystem.NoteDataBefore (mData);
 		float minabs = int.MaxValue;
 		float pos = mData.Position;
 		for (int i = 0; i < GridManager.GridCols.Count; i++) {
@@ -151,5 +155,6 @@ public class NoteSelection : MonoBehaviour {
 			}
 		}
 		mData.Position = pos;
+		UndoSystem.RegisterUndo (new UndoSystem.NoteDataChangeUndoAction (mData, dataBefore, new UndoSystem.NoteDataBefore (mData)));
 	}
 }

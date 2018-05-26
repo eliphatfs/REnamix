@@ -11,6 +11,8 @@ public class UndoSystem {
 		void Redo();
 	}
 	public static void RegisterUndo(IUndoAction action) {
+		if (UndoList.Count >= 32767)
+			UndoList.RemoveAt (0);
 		UndoList.Add (action);
 		RedoList.Clear ();
 	}
@@ -47,5 +49,42 @@ public class UndoSystem {
 			mRedoAction ();
 		}
 		#endregion
+	}
+
+	public class NoteDataChangeUndoAction : IUndoAction {
+		NoteData mNDRef;
+		NoteDataBefore mBefore, mAfter;
+		public NoteDataChangeUndoAction(NoteData ndRef, NoteDataBefore before, NoteDataBefore after) {
+			mNDRef = ndRef;
+			mBefore = before;
+			mAfter = after;
+		}
+		#region IUndoAction implementation
+		public void Undo () {
+			mNDRef.Position = mBefore.Position;
+			mNDRef.Time = mBefore.Time;
+			mNDRef.Width = mBefore.Width;
+			mNDRef.Direction = mBefore.Dir;
+			mNDRef.NotifyWidth = true;
+		}
+		public void Redo () {
+			mNDRef.Position = mAfter.Position;
+			mNDRef.Time = mAfter.Time;
+			mNDRef.Width = mAfter.Width;
+			mNDRef.Direction = mAfter.Dir;
+			mNDRef.NotifyWidth = true;
+		}
+		#endregion
+	}
+
+	public struct NoteDataBefore {
+		public float Position, Width;
+		public int Time, Dir;
+		public NoteDataBefore(NoteData source) {
+			Position = source.Position;
+			Width = source.Width;
+			Time = source.Time;
+			Dir = source.Direction;
+		}
 	}
 }

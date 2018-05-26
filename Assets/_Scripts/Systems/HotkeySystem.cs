@@ -45,6 +45,10 @@ public class HotkeySystem : MonoBehaviour {
 				DestroyObject (TimeControl.Instance.gameObject);
 				TimeControl.Instance = null;
 			}
+		} else if (Input.GetKeyDown (KeyCode.Z)) {
+			UndoSystem.Undo ();
+		} else if (Input.GetKeyDown (KeyCode.Y) || Input.GetKeyDown (KeyCode.X)) {
+			UndoSystem.Redo ();
 		}
 	}
 
