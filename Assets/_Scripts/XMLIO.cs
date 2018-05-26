@@ -92,6 +92,7 @@ public static class XMLIO {
 		nd.Position = float.Parse (node.SelectSingleNode ("m_position").InnerText);
 		nd.Width = float.Parse (node.SelectSingleNode ("m_width").InnerText);
 		nd.Time = ParamCalculator.BarToTime (float.Parse (node.SelectSingleNode ("m_time").InnerText));
+		nd.InnerID = ++HotkeySystem.AtomicCounter;
 		nd.NotifyWidth = true;
 		return go;
 	}
@@ -120,6 +121,7 @@ public static class XMLIO {
 		nd.Position = float.Parse (node.SelectSingleNode ("m_position").InnerText);
 		nd.Width = float.Parse (node.SelectSingleNode ("m_width").InnerText);
 		nd.Time = ParamCalculator.BarToTime (float.Parse (node.SelectSingleNode ("m_time").InnerText));
+		nd.InnerID = ++HotkeySystem.AtomicCounter;
 		nd.NotifyWidth = true;
 		return go;
 	}

@@ -12,13 +12,15 @@ public class Effect_Perfect : MonoBehaviour {
 	Vector3 scale;
 	// Update is called once per frame
 	void Update () {
-		scale.x -= 0.007f;
 		if (ExportVideoSystem.Instance.IsRecording)
-			scale.x -= 0.008f;
+			scale.x -= 0.015f;
+		else
+			scale.x -= 0.42f * Time.deltaTime;
 		transform.localScale = scale;
-		srenderer.color -= new Color (0, 0, 0, 0.04f);
 		if (ExportVideoSystem.Instance.IsRecording)
-			srenderer.color -= new Color (0, 0, 0, 0.05f);
+			srenderer.color -= new Color (0, 0, 0, 0.09f);
+		else
+			srenderer.color -= new Color (0, 0, 0, 2.4f * Time.deltaTime);
 		if (srenderer.color.a < 0.1f)
 			Destroy (this.gameObject);
 	}
