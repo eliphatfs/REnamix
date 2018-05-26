@@ -95,6 +95,8 @@ public class NoteSelection : MonoBehaviour {
 			Destroy (gameObject);
 			if (mData.NoteType != "HOLD" && mData.NoteType != "SUB")
 				UndoSystem.RegisterUndo (new UndoSystem.CreateNoteUndoAction (mData, name.Split (' ') [0], false));
+			else if (mData.Sub != null)
+				UndoSystem.RegisterUndo(new UndoSystem.HoldCreateUndoAction(mData, mData.Sub, false));
 		}
 		if (IsSelected) {
 			if (Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) {

@@ -52,15 +52,16 @@ public class UndoSystem {
 	}
 
 	public class NoteDataChangeUndoAction : IUndoAction {
-		NoteData mNDRef;
+		int mID;
 		NoteDataBefore mBefore, mAfter;
 		public NoteDataChangeUndoAction(NoteData ndRef, NoteDataBefore before, NoteDataBefore after) {
-			mNDRef = ndRef;
+			mID = ndRef.InnerID;
 			mBefore = before;
 			mAfter = after;
 		}
 		#region IUndoAction implementation
 		public void Undo () {
+			var mNDRef = NoteData.Instances.Find ((i) => i.InnerID == mID);
 			mNDRef.Position = mBefore.Position;
 			mNDRef.Time = mBefore.Time;
 			mNDRef.Width = mBefore.Width;
@@ -68,6 +69,7 @@ public class UndoSystem {
 			mNDRef.NotifyWidth = true;
 		}
 		public void Redo () {
+			var mNDRef = NoteData.Instances.Find ((i) => i.InnerID == mID);
 			mNDRef.Position = mAfter.Position;
 			mNDRef.Time = mAfter.Time;
 			mNDRef.Width = mAfter.Width;
@@ -80,11 +82,13 @@ public class UndoSystem {
 	public struct NoteDataBefore {
 		public float Position, Width;
 		public int Time, Dir;
+		public int ID;
 		public NoteDataBefore(NoteData source) {
 			Position = source.Position;
 			Width = source.Width;
 			Time = source.Time;
 			Dir = source.Direction;
+			ID = source.InnerID;
 		}
 	}
 
@@ -96,20 +100,19 @@ public class UndoSystem {
 		public CreateNoteUndoAction (NoteData data, string path, bool createOrdestroy=true) {
 			mNoteData = new NoteDataBefore(data);
 			mPrefabPath = path;
-			CurrentData = data;
 			mIsCreate = createOrdestroy;
 		}
 
 		private void _undo () {
-			GameObject.DestroyObject (CurrentData.gameObject);
-			// CurrentData = null;
+			GameObject.DestroyObject (NoteData.Instances.Find ((i) => i.InnerID == mNoteData.ID).gameObject);
 		}
 		private void _redo () {
-			HotkeySystem.NewNote (mPrefabPath).GetComponent<NoteData>() = CurrentData;
+			CurrentData = HotkeySystem.NewNote (mPrefabPath).GetComponent<NoteData>();
 			CurrentData.Position = mNoteData.Position;
 			CurrentData.Time = mNoteData.Time;
 			CurrentData.Width = mNoteData.Width;
 			CurrentData.Direction = mNoteData.Dir;
+			CurrentData.InnerID = mNoteData.ID;
 			CurrentData.NotifyWidth = true;
 		}
 

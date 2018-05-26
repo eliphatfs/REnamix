@@ -93,6 +93,7 @@ public class HotkeySystem : MonoBehaviour {
 		}
 	}
 
+	public static volatile int AtomicCounter = 0;
 	public static GameObject NewNote(string path, int timedelta=0, bool regundo=false) {
 		GameObject go = GameObject.Instantiate (Resources.Load<GameObject> (path));
 		NoteData nd = go.GetComponent<NoteData> ();
@@ -111,6 +112,7 @@ public class HotkeySystem : MonoBehaviour {
 		nd.Position = ParamCalculator.UnityXToVanillaPosition (tmp.x) - nd.Width / 2;
 		nd.Time = ParamCalculator.PositionYToTime (tmp.y) + timedelta;
 		nd.Width = WidthStore [WidthStoreN];
+		nd.InnerID = ++AtomicCounter;
 		nd.NotifyWidth = true;
 		go.GetComponent<NoteSelection> ().ShouldAttachGridY = true;
 		if (regundo) {

@@ -14,6 +14,10 @@ public class NoteData : MonoBehaviour {
 	public bool NotifyWidth;
 	public string NoteType;
 	public NoteData Sub;
+	public int InnerID {
+		get;
+		internal set;
+	}
 
 	void Start() {
 		Instances.Add (this);
