@@ -2,15 +2,20 @@
 自制分为两部分: Decomposition 和 RECONSTRUCTION.  
 **使用前请仔细阅读本文档！**  
 
-下载地址：https://github.com/strongrex2001/REnamix/releases/tag/Renamix.beta.2.1  
-(Renamix.beta.2.1.zip，解压后可直接使用)
+下载地址：https://github.com/strongrex2001/REnamix/releases/tag/Renamix.beta.2.2  
+(Renamix.beta.2.2.zip，解压后可直接使用)
   
 可视化做谱器。并且可以直接导出avi视频，输出文件是renamix_Data下的output.avi文件。  
 大量操作均需要由快捷键完成。  
-
+  
+## 更新日志  
+*2.2 beta更新日志:*  
+- 增加撤销|重做功能  
+- 修复了已知的两个bug  
+- 优化了导出视频的效率  
+  
 ## 已知的bug  
-输出的xml文件offset符号反了，需要手动增加/删除数值前负号"-"(已修复但未发布)  
-当使用鼠标滚轮滚到0:00前时会导致音频不同步，可以通过进度条将时间滚回0:00后来解决(已修复但未发布)  
+暂无 欢迎反馈！  
   
 ## 快捷键
 Ctrl+Alt+O 打开XML文件  
@@ -19,6 +24,8 @@ Ctrl+Alt+R 导出视频
 Ctrl+Alt+K 设置面板  
 Ctrl+Alt+S 保存XML文件  
 Ctrl+Alt+V 打开/关闭跳转和进度条的面板  
+Ctrl+Alt+Z 撤销  
+Ctrl+Alt+X/Y 重做  
   
 Z 鼠标位置创建蓝键
 X 鼠标位置创建红键
