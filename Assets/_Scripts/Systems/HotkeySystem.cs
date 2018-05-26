@@ -58,12 +58,12 @@ public class HotkeySystem : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.Z)) {
 			if (Mathf.Abs (GridManager.Instance.GridDir) > 1)
 				MessageBox.Show ("You Should Enable Grids First!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			NewNote ("NoteNormal");
+			NewNote ("NoteNormal", regundo: true);
 		}
 		if (Input.GetKeyDown (KeyCode.X)) {
 			if (Mathf.Abs (GridManager.Instance.GridDir) > 1)
 				MessageBox.Show ("You Should Enable Grids First!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			NewNote ("NoteChain");
+			NewNote ("NoteChain", regundo: true);
 		}
 		if (Input.GetKeyDown (KeyCode.C)) {
 			if (Mathf.Abs (GridManager.Instance.GridDir) > 1)
@@ -78,6 +78,7 @@ public class HotkeySystem : MonoBehaviour {
 			HoldScaling hs = go.GetComponent<HoldScaling> ();
 			hs.Begin = bg;
 			hs.End = ed;
+			UndoSystem.RegisterUndo(new UndoSystem.HoldCreateUndoAction(bg.GetComponent<NoteData>(), ed.GetComponent<NoteData>()));
 		}
 
 		KeyCode[] ls = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4 };
@@ -92,7 +93,7 @@ public class HotkeySystem : MonoBehaviour {
 		}
 	}
 
-	public GameObject NewNote(string path, int timedelta=0) {
+	public static GameObject NewNote(string path, int timedelta=0, bool regundo=false) {
 		GameObject go = GameObject.Instantiate (Resources.Load<GameObject> (path));
 		NoteData nd = go.GetComponent<NoteData> ();
 		nd.Direction = GridManager.Instance.GridDir;
@@ -112,6 +113,9 @@ public class HotkeySystem : MonoBehaviour {
 		nd.Width = WidthStore [WidthStoreN];
 		nd.NotifyWidth = true;
 		go.GetComponent<NoteSelection> ().ShouldAttachGridY = true;
+		if (regundo) {
+			UndoSystem.RegisterUndo (new UndoSystem.CreateNoteUndoAction (nd, path));
+		}
 		return go;
 	}
 

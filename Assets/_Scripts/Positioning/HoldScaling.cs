@@ -25,12 +25,14 @@ public class HoldScaling : MonoBehaviour, INoteScaling {
 			if (End != null && End.gameObject.activeInHierarchy)
 				DestroyObject (End.gameObject);
 			Destroy (gameObject);
+			UndoSystem.RegisterUndo(new UndoSystem.HoldCreateUndoAction(Begin.GetComponent<NoteData>(), End.GetComponent<NoteData>(), false));
 			return;
 		}
 		if (End == null || !End.gameObject.activeInHierarchy) {
 			if (Begin != null && Begin.gameObject.activeInHierarchy)
 				DestroyObject (Begin.gameObject);
 			Destroy (gameObject);
+			UndoSystem.RegisterUndo(new UndoSystem.HoldCreateUndoAction(Begin.GetComponent<NoteData>(), End.GetComponent<NoteData>(), false));
 			return;
 		}
 		Vector3 bgp = Begin.position;

@@ -93,6 +93,8 @@ public class NoteSelection : MonoBehaviour {
 
 			yield return new WaitForEndOfFrame ();
 			Destroy (gameObject);
+			if (mData.NoteType != "HOLD" && mData.NoteType != "SUB")
+				UndoSystem.RegisterUndo (new UndoSystem.CreateNoteUndoAction (mData, name.Split (' ') [0], false));
 		}
 		if (IsSelected) {
 			if (Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl)) {

@@ -87,4 +87,76 @@ public class UndoSystem {
 			Dir = source.Direction;
 		}
 	}
+
+	public class CreateNoteUndoAction : IUndoAction {
+		NoteDataBefore mNoteData;
+		public NoteData CurrentData;
+		string mPrefabPath;
+		bool mIsCreate;
+		public CreateNoteUndoAction (NoteData data, string path, bool createOrdestroy=true) {
+			mNoteData = new NoteDataBefore(data);
+			mPrefabPath = path;
+			CurrentData = data;
+			mIsCreate = createOrdestroy;
+		}
+
+		private void _undo () {
+			GameObject.DestroyObject (CurrentData.gameObject);
+			// CurrentData = null;
+		}
+		private void _redo () {
+			HotkeySystem.NewNote (mPrefabPath).GetComponent<NoteData>() = CurrentData;
+			CurrentData.Position = mNoteData.Position;
+			CurrentData.Time = mNoteData.Time;
+			CurrentData.Width = mNoteData.Width;
+			CurrentData.Direction = mNoteData.Dir;
+			CurrentData.NotifyWidth = true;
+		}
+
+		#region IUndoAction implementation
+		public void Undo () {
+			if (mIsCreate)
+				_undo ();
+			else
+				_redo ();
+		}
+
+		public void Redo () {
+			if (!mIsCreate)
+				_undo ();
+			else
+				_redo ();
+		}
+		#endregion
+	}
+
+	public class HoldCreateUndoAction : IUndoAction {
+		CreateNoteUndoAction mBeginAction, mSubAction;
+		bool mIsCreate;
+		public HoldCreateUndoAction(NoteData begin, NoteData sub, bool isCreate=true) {
+			mBeginAction = new CreateNoteUndoAction(begin, "NoteHoldHold", isCreate);
+			mSubAction = new CreateNoteUndoAction(sub, "NoteHoldSub", isCreate);
+			mIsCreate = isCreate;
+		}
+		private void _recreate() {
+			var go = GameObject.Instantiate (Resources.Load<GameObject> ("NoteHold"));
+			HoldScaling hs = go.GetComponent<HoldScaling> ();
+			hs.Begin = mBeginAction.CurrentData.transform;
+			hs.End = mSubAction.CurrentData.transform;
+		}
+		#region IUndoAction implementation
+		public void Undo () {
+			mBeginAction.Undo ();
+			mSubAction.Undo ();
+			if (!mIsCreate)
+				_recreate ();
+		}
+		public void Redo () {
+			mBeginAction.Redo ();
+			mSubAction.Redo ();
+			if (mIsCreate)
+				_recreate ();
+		}
+		#endregion
+	}
 }
