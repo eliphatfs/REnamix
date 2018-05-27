@@ -10,7 +10,7 @@ public class TimeControlSystem : MonoBehaviour {
 
 	public static int CurrentTimeMillis {
 		get {
-			return Mathf.Max(mTimerStartMillis + (int)mTimer.ElapsedMilliseconds - ChartInfoManager.Offset, 0);
+			return Mathf.Max (mTimerStartMillis + (int)(mTimer.ElapsedMilliseconds * PlaybackSystem.PlaySpeed) - ChartInfoManager.Offset, 0);
 		}
 		set {
 			if (mTimer.IsRunning)

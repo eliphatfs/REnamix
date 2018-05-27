@@ -1,15 +1,12 @@
-namespace VarispeedDemo.SoundTouch
+internal class SoundTouchProfile
 {
-    internal class SoundTouchProfile
-    {
-        public bool UseTempo { get; set; }
-        public bool UseAntiAliasing { get; set; }
-        public bool UseQuickSeek { get; set; }
+    public bool UseTempo { get; set; }
+    public bool UseAntiAliasing { get; set; }
+    public bool UseQuickSeek { get; set; }
 
-        public SoundTouchProfile(bool useTempo, bool useAntiAliasing)
-        {
-            UseTempo = useTempo;
-            UseAntiAliasing = useAntiAliasing;
-        }
+    public SoundTouchProfile(bool useTempo, bool useAntiAliasing)
+    {
+        UseTempo = useTempo;
+        UseAntiAliasing = useAntiAliasing;
     }
 }

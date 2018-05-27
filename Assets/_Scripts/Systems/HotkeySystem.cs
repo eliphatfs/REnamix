@@ -81,6 +81,18 @@ public class HotkeySystem : MonoBehaviour {
 			UndoSystem.RegisterUndo(new UndoSystem.HoldCreateUndoAction(bg.GetComponent<NoteData>(), ed.GetComponent<NoteData>()));
 		}
 
+		if (Input.GetKeyDown (KeyCode.U)) {
+			if (PlaybackSystem.PlaySpeed >= 0.2f)
+				PlaybackSystem.PlaySpeed -= 0.1f;
+			else
+				PlaybackSystem.PlaySpeed = 0.1f;
+		} else if (Input.GetKeyDown (KeyCode.I)) {
+			if (PlaybackSystem.PlaySpeed <= 2.9f)
+				PlaybackSystem.PlaySpeed += 0.1f;
+			else
+				PlaybackSystem.PlaySpeed = 3f;
+		}
+
 		KeyCode[] ls = { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4 };
 		for (int i = 0; i < 4; i++)
 			if (Input.GetKeyDown (ls [i]))
