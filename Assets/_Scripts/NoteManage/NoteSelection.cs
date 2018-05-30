@@ -14,7 +14,7 @@ public class NoteSelection : MonoBehaviour {
 	public bool ShouldAttachGridX = false;
 	public bool ShouldAttachGridY = false;
 
-	int lastClick = 0;
+	float lastClick = 0f;
 
 	void Start() {
 		Instances.Add (this);
@@ -60,10 +60,11 @@ public class NoteSelection : MonoBehaviour {
 			}
 			yield break;
 		}
-		lastClick++;
+		lastClick += Time.deltaTime;
 
 		if (MouseInterfaceID == -1 && Input.GetMouseButton (0) && GridManager.Instance.GridDir == mData.Direction && JudgeContain () && !TimeControlSystem.isPlaying) {
-			if (lastClick < 20) {
+			if (lastClick < 0.33f) {
+				Debug.Log (1);
 				Instantiate (Resources.Load<GameObject> ("UI/NoteDataEdit"), HotkeySystem.Instance.Canvas.transform).GetComponent<NoteDataEdit> ().Editing = mData;
 				MouseInterfaceID = -2;
 			} else {
